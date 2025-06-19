@@ -1,0 +1,4 @@
+# config.py
+class Config:
+    SECRET_KEY = '80541399575a7a42ea7527e420fasd4546317aca57562680e227693e7c5a18.'
+

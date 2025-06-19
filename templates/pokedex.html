@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PokéApp</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/general.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles/pokedex.css') }}">
+
+</head>
+
+<body class="background-pokemon">
+    <div class="titulo">
+        <img src="{{ url_for('static', filename='images/pokedex_logo.webp') }}" alt="Pokedex" width="200" height=""
+            class="d-inline-block align-text-top">
+    </div>
+    <div class="container">
+        <aside>
+            <div id="pokedex">
+                <div id="left">
+                    <div id="logo"></div>
+                    <div id="bg_curve1_left"></div>
+                    <div id="bg_curve2_left"></div>
+                    <div id="curve1_left">
+                        <div id="buttonGlass">
+                            <div id="reflect"> </div>
+                        </div>
+                        <div id="miniButtonGlass1"></div>
+                        <div id="miniButtonGlass2"></div>
+                        <div id="miniButtonGlass3"></div>
+                    </div>
+                    <div id="curve2_left">
+                        <div id="junction">
+                            <div id="junction1"></div>
+                            <div id="junction2"></div>
+                        </div>
+                    </div>
+                    <div id="screen">
+                        <div id="topPicture">
+                            <div id="buttontopPicture1"></div>
+                            <div id="buttontopPicture2"></div>
+                        </div>
+                        <div id="picture">
+                            <img id="preview" height="175" style="display: none; max-width: 200px;">
+                        </div>
+                        <div id="buttonbottomPicture"></div>
+                        <div id="speakers">
+                            <div class="sp"></div>
+                            <div class="sp"></div>
+                            <div class="sp"></div>
+                            <div class="sp"></div>
+                        </div>
+                    </div>
+                    <div id="bigbluebutton"></div>
+                    <div id="barbutton1"></div>
+                    <div id="barbutton2"></div>
+                    <div id="cross">
+                        <div id="leftcross">
+                            <div id="leftT"></div>
+                        </div>
+                        <div id="topcross">
+                            <div id="upT"></div>
+                        </div>
+                        <div id="rightcross">
+                            <div id="rightT"></div>
+                        </div>
+                        <div id="midcross">
+                            <div id="midCircle"></div>
+                        </div>
+                        <div id="botcross">
+                            <div id="downT"></div>
+                        </div>
+                    </div>
+
+                </div>
+                <div id="right">
+                    <div id="stats">
+                        <div id="Nombre">
+                            <strong id="pokemon-name"></strong><br />
+                        </div>
+                        <strong>Confidence:</strong> <span id="confidence"></span>%<br />
+                        <strong><br>2 pokemon posible:</strong> % Prediccion<br />
+                        <strong>3 pokemon posible:</strong> % Prediccion<br />
+
+                    </div>
+                    <div id="blueButtons1">
+                        <div class="blueButton"></div>
+                        <div class="blueButton"></div>
+                        <div class="blueButton"></div>
+                        <div class="blueButton"></div>
+                        <div class="blueButton"></div>
+                    </div>
+                    <div id="blueButtons2">
+                        <div class="blueButton"></div>
+                        <div class="blueButton"></div>
+                        <div class="blueButton"></div>
+                        <div class="blueButton"></div>
+                        <div class="blueButton"></div>
+                    </div>
+                    <div id="miniButtonGlass4"></div>
+                    <div id="miniButtonGlass5"></div>
+                    <div id="barbutton3"></div>
+                    <div id="barbutton4"></div>
+                    <div id="yellowBox1"></div>
+                    <div id="yellowBox2"></div>
+                    <div id="bg_curve1_right"></div>
+                    <div id="bg_curve2_right"></div>
+                    <div id="curve1_right"></div>
+                    <div id="curve2_right"></div>
+                    
+                    
+                </div>
+            </div>
+            
+        </aside>
+
+        <section>
+            <div class="menu card">
+
+                <div class="formulario">
+
+                    <form id="upload-form">
+                        <input type="file" id="file-input" accept="image/*" required>
+                        <br>
+                        <button type="submit" class="btnPokemon">¿Quién es ese Pokémon?</button>
+                    </form>
+                </div>
+                <div class="parrafo">
+                    <p>*Nota: Esta Pokedex sólo puede identificar cualquiera de los 151 Pokemon de la Región de Kanto.
+                    </p>
+                </div>
+
+
+
+            </div>
+            <div class="anime-chat">
+
+                <div class="anime-bubble left">
+                    <div class="bubble-content" id="bubble-content"></div>
+                    <div class="bubble-tail" id="bubble-tail"></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+    <script>
+        const form = document.getElementById('upload-form');
+        const fileInput = document.getElementById('file-input');
+        const preview = document.getElementById('preview');
+        // const resultDiv = document.getElementById('result');
+        const pokemonName = document.getElementById('pokemon-name');
+
+        const confidence = document.getElementById('confidence');
+        const description = document.getElementById('bubble-content');
+        const descriptionTail = document.getElementById('bubble-tail');
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            console.log("file " + file);
+            if (file) {
+                console.log("URL.createObjectURL(file) " + URL.createObjectURL(file) + " " + file.name);
+                preview.src = URL.createObjectURL(file);
+                preview.style.display = 'block';
+                // resultDiv.style.display = 'none';
+            }
+        });
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = fileInput.files[0];
+
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                // Actualizar contenido y mostrar resultados
+                pokemonName.textContent = data.pokemon;
+                confidence.textContent = (data.confidence * 100).toFixed(2);
+                // console.log("DESCRIPCION" + data.descripcion);
+                description.textContent = data.descripcion;
+
+                // Mostrar el cuadro de diálogo y la cola   
+                // resultDiv.style.display = 'block';
+                // description.style.display = 'block';
+                // descriptionTail.style.display = 'block';
+
+
+                const bubble = document.querySelector('.anime-bubble');
+                // const tail = document.querySelector('.bubble-tail');
+                // Mostrar el globo de diálogo
+                bubble.classList.add('show');
+                // tail.classList.add('show');
+
+                // Ocultar al cargar otra imagen
+                fileInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        preview.src = URL.createObjectURL(file);
+                        preview.style.display = 'block';
+                        bubble.classList.remove('show'); // Ocultar la burbuja anterior
+                        // tail.classList.remove('show');
+
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            }
+        });
+    </script>
+
+
+</body>
+
+</html>
