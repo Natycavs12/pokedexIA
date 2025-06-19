@@ -80,9 +80,9 @@
                         <div id="Nombre">
                             <strong id="pokemon-name"></strong><br />
                         </div>
-                        <strong>Confidence:</strong> <span id="confidence"></span>%<br />
-                        <strong><br>2 pokemon posible:</strong> % Prediccion<br />
-                        <strong>3 pokemon posible:</strong> % Prediccion<br />
+                        <strong>Confidence:</strong> <span id="confidence1"></span>%<br />
+                        <strong>2° pokemon posible:</strong> <span id="pokemon2"></span> - <span id="confidence2"></span>%<br />
+                        <strong>3° pokemon posible:</strong> <span id="pokemon3"></span> - <span id="confidence3"></span>%<br />
 
                     </div>
                     <div id="blueButtons1">
@@ -151,8 +151,13 @@
         const preview = document.getElementById('preview');
         // const resultDiv = document.getElementById('result');
         const pokemonName = document.getElementById('pokemon-name');
+        const pokemon2 = document.getElementById('pokemon2');
+        const pokemon3 = document.getElementById('pokemon3');
 
-        const confidence = document.getElementById('confidence');
+        const confidence1 = document.getElementById('confidence1');
+        const confidence2 = document.getElementById('confidence2');
+        const confidence3 = document.getElementById('confidence3');
+
         const description = document.getElementById('bubble-content');
         const descriptionTail = document.getElementById('bubble-tail');
 
@@ -190,15 +195,15 @@
                 }
 
                 // Actualizar contenido y mostrar resultados
-                pokemonName.textContent = data.pokemon;
-                confidence.textContent = (data.confidence * 100).toFixed(2);
+                pokemonName.textContent = data.pokemon1;
+                confidence1.textContent = (data.confidence1 * 100).toFixed(2);
                 // console.log("DESCRIPCION" + data.descripcion);
-                description.textContent = data.descripcion;
+                description.textContent = data.descripcion1;
 
-                // Mostrar el cuadro de diálogo y la cola   
-                // resultDiv.style.display = 'block';
-                // description.style.display = 'block';
-                // descriptionTail.style.display = 'block';
+                pokemon2.textContent = data.pokemon2;
+                confidence2.textContent = (data.confidence2 * 100).toFixed(2);
+                pokemon3.textContent = data.pokemon3;
+                confidence3.textContent = (data.confidence3 * 100).toFixed(2);
 
 
                 const bubble = document.querySelector('.anime-bubble');

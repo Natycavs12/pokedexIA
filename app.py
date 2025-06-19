@@ -3,10 +3,6 @@
 # importación de liberías
 ########################################################
 
-# import tensorflow as tf
-# from tensorflow import keras
-# from tensorflow.keras import layers 
-# from keras import layers
 import numpy as np
 from flask import Flask, request, jsonify, render_template
 from config import Config
@@ -60,12 +56,6 @@ class_names = ['Abra','Aerodactyl','Alakazam','Alolan Sandslash','Arbok','Arcani
 def leer_csv(pokemon_name):
     csv_path = 'C:/Users/natycavs/Desktop/pokemon/pokeapp/pokemon_lista_pokedex.csv'
     with open(csv_path, 'r') as file:
-        # lines = file.readlines()
-        # Procesar las líneas del CSV según sea necesario
-        # for line in lines:
-            # print(line.strip()) 
-            # if pokemon_name in line:
-            #     return line.split(",")[2].strip()
 
         reader = csv.reader(file)
         for row in reader:
@@ -75,9 +65,9 @@ def leer_csv(pokemon_name):
 ########################################################
 """ RUTAS """
 ########################################################
+
 @app.route("/")
 def index():
-    # entrenar()
     return render_template("index.html")
 
 @app.route('/pokedex')
@@ -100,23 +90,56 @@ def predict():
     
     # Realizar predicción
     predictions = model.predict(img_array)
-    print("predictions: ",predictions)
-    predicted_class = class_names[np.argmax(predictions[0])]
-    # print("predictions 1: ",np.argmax(predictions[0]))
-    # print("predictions 1: ",class_names[np.argmax(predictions[2])])
+    # print("todas las predictions: ",predictions)
+    probs = predictions[0]  # shape: (num_classes,)
+
+    # probs: array de probabilidades para cada clase, por ejemplo, salida de model.predict_proba()
+    # class_names: lista con los nombres de las clases
+
+    # Obtener los índices de las 3 probabilidades más altas
+    top3_indices = np.argsort(probs)[-3:][::-1]
+    print("top3_indices: ",top3_indices)
+
+    # Obtener los nombres de las clases y sus probabilidades
+    top3_classes = [class_names[i] for i in top3_indices]
+    top3_confidences = [float(probs[i]) for i in top3_indices]
+
+
+    # predicted_class1 = class_names[np.argmax(predictions[0])]
+    # predicted_class2 = class_names[np.argmax(predictions[1])]
+    # predicted_class3 = class_names[np.argmax(predictions[2])]
+    predicted_class1 = top3_classes[0]
+    predicted_class2 = top3_classes[1]
+    predicted_class3 = top3_classes[2]
 
     # print("predicted_class: ",predicted_class)
-    confidence = float(np.max(predictions[0]))
-    print("pokemon: ", predicted_class, " confidence: ",confidence)
-    descripcion = leer_csv(predicted_class)
-    # print("descripcion: ", descripcion)
+    # confidence1 = float(np.max(predictions[0]))
+    # confidence2 = float(np.max(predictions[1]))
+    # confidence3 = float(np.max(predictions[2]))
+
+    confidence1 = round(top3_confidences[0], 2)
+    confidence2 = round(top3_confidences[1], 2)
+    confidence3 = round(top3_confidences[2], 2)
+
+    print("1) pokemon: ", predicted_class1, " confidence: ",confidence1)
+    print("2) pokemon: ", predicted_class2, " confidence: ",confidence2)
+    print("3) pokemon: ", predicted_class3, " confidence: ",confidence3)
+
+    descripcion1 = leer_csv(predicted_class1)
+    # descripcion2 = leer_csv(predicted_class2)
+    # descripcion3 = leer_csv(predicted_class3)
 
     return jsonify({
-        'pokemon': predicted_class,
-        'confidence': confidence,
-        'descripcion': descripcion
+        'pokemon1': predicted_class1,
+        'confidence1': confidence1,
+        'descripcion1': descripcion1,
+        'pokemon2': predicted_class2,
+        'confidence2': confidence2,
+        # 'descripcion2': descripcion2,
+        'pokemon3': predicted_class3,
+        'confidence3': confidence3
+        # 'descripcion3': descripcion3
     })
-
 
 if __name__ == '__main__':
     # app.run(host='0.0.0.0', port=8000, debug=True)
